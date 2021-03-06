@@ -18,14 +18,24 @@ package com.example.androiddevchallenge
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.androiddevchallenge.ui.CountdownScreen
+import com.example.androiddevchallenge.ui.InsertTimeScreen
+import com.example.androiddevchallenge.ui.InsertedTimeState
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import kotlinx.coroutines.delay
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -34,15 +44,43 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    suspend fun startTimer(isRunning: Boolean, initialValue: Int): Int {
+        return if (isRunning) {
+            delay(1000)
+            initialValue + 1
+        } else {
+            0
+        }
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+    }
 }
 
 // Start building your app here!
 @Composable
 fun MyApp() {
+    val insertedTimeState = remember {
+        mutableStateOf(InsertedTimeState(0, 30, false))
+    }
+
     Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+        Box(Modifier.padding(8.dp)) {
+            Crossfade(targetState = insertedTimeState.value.showDialog) { showDialog ->
+                if (showDialog) {
+                    InsertTimeScreen(insertedTimeState)
+                } else {
+                    CountdownScreen(insertedTimeState)
+                }
+            }
+        }
     }
 }
+
+
+fun btnText(isStart: Boolean): String = if (isStart) "Pause" else "Start"
 
 @Preview("Light Theme", widthDp = 360, heightDp = 640)
 @Composable

@@ -10,4 +10,10 @@
       the License.
       -->
     <string name="app_name">AndroidDevChallenge</string>
+    <string name="dialog_text">Click on timer to create new timer</string>
+    <string name="dialog_minutes_label">minute</string>
+    <string name="dialog_seconds_label">second</string>
+    <string name="dialog_button">Start</string>
+    <string name="content_description_play_button">play</string>
+    <string name="hint">Click on timer to edit timer value</string>
 </resources>
